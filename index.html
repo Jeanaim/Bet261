@@ -3,68 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bet261 Virtual Expert</title>
+    <title>Bet261 Virtual Expert Pro</title>
     <style>
-        body { background-color: #0f172a; color: #ffffff; font-family: sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 16px; }
-        h1 { color: #facc15; text-align: center; margin-bottom: 2px; font-size: 24px; font-weight: bold; }
-        .subtitle { color: #94a3b8; text-align: center; font-size: 13px; margin-top: 0; }
-        .input-group { display: flex; flex-direction: column; gap: 6px; }
-        label { color: #cbd5e1; font-size: 14px; }
-        input { background-color: #1e293b; border: 1px solid #475569; border-radius: 12px; padding: 14px; color: white; font-size: 16px; outline: none; }
-        input:focus { border-color: #facc15; }
-        button { background-color: #facc15; color: #0f172a; border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 8px; }
-        .btn-clear { background-color: transparent; border: 1px solid #94a3b8; color: #94a3b8; padding: 10px; }
-        .result-box { background-color: #1e293b; border-radius: 16px; padding: 20px; text-align: center; margin-top: 10px; }
-        #prediction { font-size: 15px; font-weight: 500; margin-bottom: 8px; line-height: 1.4; }
-        #confiance { font-size: 18px; font-weight: bold; }
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #151f32;
+            --accent: #facc15;
+            --accent-hover: #eab308;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border: #22314d;
+        }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .app-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            box-sizing: border-box;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .badge {
+            background: rgba(250, 252, 21, 0.1);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        h1 {
+            color: #ffffff;
+            font-size: 26px;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        h1 span { color: var(--accent); }
+        .subtitle {
+            color: var(--text-sub);
+            font-size: 13px;
+            margin: 6px 0 0 0;
+        }
+        .input-box {
+            position: relative;
+            margin-bottom: 18px;
+        }
+        .input-box label {
+            display: block;
+            color: var(--text-sub);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-wrapper input {
+            width: 100%;
+            background: #0b0f19;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 16px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+        .input-wrapper input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.15);
+            outline: none;
+        }
+        .btn-prime {
+            width: 100%;
+            background: var(--accent);
+            color: #000000;
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(250, 204, 21, 0.2);
+            margin-top: 10px;
+        }
+        .btn-prime:active { transform: scale(0.98); }
+        .btn-sec {
+            width: 100%;
+            background: transparent;
+            color: var(--text-sub);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+        .btn-sec:hover { background: rgba(255,255,255,0.02); color: white;}
+        
+        /* Fenêtre de résultat Pro */
+        .res-panel {
+            background: #0b0f19;
+            border-radius: 18px;
+            padding: 20px;
+            margin-top: 24px;
+            border: 1px solid var(--border);
+            text-align: center;
+            display: none;
+        }
+        .res-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        .gauge-container {
+            width: 100%;
+            background: #1e293b;
+            height: 8px;
+            border-radius: 10px;
+            margin: 12px 0;
+            overflow: hidden;
+        }
+        .gauge-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #val-percent {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin: 5px 0;
+        }
+        #val-advice {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>BET261 VIRTUAL EXPERT</h1>
-    <p class="subtitle">Analyse mathématique de la ligue</p>
-    <div class="input-group"><label>Matchs consécutifs sans victoire</label><input type="number" id="defaites" placeholder="Ex: 5"></div>
-    <div class="input-group"><label>Moyenne buts (3 derniers matchs)</label><input type="number" step="0.1" id="buts" placeholder="Ex: 2.5"></div>
-    <div class="input-group"><label>Cote actuelle Bet261</label><input type="number" step="0.01" id="cote" placeholder="Ex: 1.75"></div>
-    <button onclick="calculerKelly()">CALCULER L'ANALYSE KELLY</button>
-    <button class="btn-clear" onclick="effacer()">EFFACER LES DONNÉES</button>
-    <div class="result-box"><div id="prediction">En attente de saisie des données...</div><div id="confiance"></div></div>
+
+<div class="app-card">
+    <div class="header">
+        <span class="badge">Algorithme Kelly v2.0</span>
+        <h1>BET261 <span>EXPERT</span></h1>
+        <p class="subtitle">Analyseur de probabilités pour ligue virtuelle</p>
+    </div>
+
+    <div class="input-box">
+        <label>Série actuelle sans victoire</label>
+        <div class="input-wrapper">
+            <input type="number" id="defaites" placeholder="Nombre de matchs (ex: 4)">
+        </div>
+    </div>
+
+    <div class="input-box">
+        <label>Moyenne buts (3 derniers matchs)</label>
+        <div class="input-wrapper">
+            <input type="number" step="0.1" id="buts" placeholder="Ex: 2.3">
+        </div>
+    </div>
+
+    <div class="input-box">
+        <label>Cote actuelle sur Bet261</label>
+        <div class="input-wrapper">
+            <input type="number" step="0.01" id="cote" placeholder="Ex: 1.85">
+        </div>
+    </div>
+
+    <button class="btn-prime" onclick="analyserMatch()">DIAGNOSTIQUER LE MATCH</button>
+    <button class="btn-sec" onclick="reinitialiser()">Effacer les filtres</button>
+
+    <div class="res-panel" id="resultats">
+        <div class="res-title">Rapport d'analyse</div>
+        <div id="val-percent">0%</div>
+        <div class="gauge-container">
+            <div class="gauge-bar" id="jauge"></div>
+        </div>
+        <div id="val-advice">Analyse en cours...</div>
+    </div>
 </div>
+
 <script>
-    function calculerKelly() {
+    function analyserMatch() {
         const defaites = parseInt(document.getElementById('defaites').value) || 0;
         const buts = parseFloat(document.getElementById('buts').value) || 0;
         const cote = parseFloat(document.getElementById('cote').value.replace(',', '.')) || 0;
-        const predText = document.getElementById('prediction');
-        const confText = document.getElementById('confiance');
+        
+        const panel = document.getElementById('resultats');
+        const txtPercent = document.getElementById('val-percent');
+        const jauge = document.getElementById('jauge');
+        const txtAdvice = document.getElementById('val-advice');
+
         if (cote <= 1) {
-            predText.innerText = "Veuillez entrer une cote valide supérieure à 1.00";
-            predText.style.color = "#ef4444"; confText.innerText = ""; return;
+            panel.style.display = "block";
+            txtPercent.innerText = "Erreur";
+            txtPercent.style.color = "#ef4444";
+            jauge.style.width = "0%";
+            txtAdvice.innerText = "La cote insérée est incorrecte.";
+            txtAdvice.style.background = "rgba(239, 68, 68, 0.1)";
+            txtAdvice.style.color = "#ef4444";
+            return;
         }
-        let probabiliteGagne = 0.38;
-        if (defaites > 0) probabiliteGagne += (defaites * 0.11);
-        if (buts > 2.2) probabiliteGagne += 0.06;
-        if (probabiliteGagne > 0.92) probabiliteGagne = 0.92;
-        const b = cote - 1; const p = probabiliteGagne; const q = 1 - p;
-        const fractionKelly = ((b * p) - q) / b; const pourcentageMise = fractionKelly * 100;
-        confText.innerText = "Probabilité estimée : " + Math.round(probabiliteGagne * 100) + "%";
-        predText.style.color = "#ffffff";
-        if (pourcentageMise > 0 && probabiliteGagne >= 0.65) {
-            predText.innerText = "🔥 LE PARI EN VAUT LA PEINE !\nMisez idéalement : " + pourcentageMise.toFixed(1) + "% de votre capital.";
-            confText.style.color = "#22c55e";
-        } else if (pourcentageMise <= 0 && probabiliteGagne >= 0.60) {
-            predText.innerText = "⚠️ ATTENTION : Cote trop basse pour la prise de risque.\nLe calcul de Kelly conseille de s'abstenir (0%).";
-            confText.style.color = "#facc15";
+
+        // Algorithme mathématique
+        let proba = 0.38;
+        if (defaites > 0) proba += (defaites * 0.11);
+        if (buts > 2.2) proba += 0.06;
+        if (proba > 0.92) proba = 0.92;
+
+        const b = cote - 1;
+        const fractionKelly = ((b * proba) - (1 - proba)) / b;
+        const misePourcent = fractionKelly * 100;
+
+        // Affichage dynamique
+        panel.style.display = "block";
+        const probaArrondie = Math.round(proba * 100);
+        txtPercent.innerText = probaArrondie + "%";
+        txtPercent.style.color = "#ffffff";
+        jauge.style.width = probaArrondie + "%";
+
+        if (misePourcent > 0 && proba >= 0.65) {
+            jauge.style.backgroundColor = "#22c55e";
+            txtAdvice.innerText = "🔥 OPPORTUNITÉ EXCELLENTE\nConseil Kelly : Misez " + misePourcent.toFixed(1) + "% de votre capital.";
+            txtAdvice.style.background = "rgba(34, 197, 94, 0.1)";
+            txtAdvice.style.color = "#22c55e";
+        } else if (misePourcent <= 0 && proba >= 0.60) {
+            jauge.style.backgroundColor = "#facc15";
+            txtAdvice.innerText = "⚠️ COTE TROP BASSE\nLa probabilité est bonne mais la cote ne couvre pas assez le risque. Ne pas jouer (0%).";
+            txtAdvice.style.background = "rgba(250, 204, 21, 0.1)";
+            txtAdvice.style.color = "#facc15";
         } else {
-            predText.innerText = "❌ ALERTE DANGER : Ne pas jouer.\nRisque de perte trop élevé.";
-            confText.style.color = "#ef4444";
+            jauge.style.backgroundColor = "#ef4444";
+            txtAdvice.innerText = "❌ ALERTE RISQUE ÉLEVÉ\nL'indice de confiance est insuffisant. Évitez absolument ce match.";
+            txtAdvice.style.background = "rgba(239, 68, 68, 0.1)";
+            txtAdvice.style.color = "#ef4444";
         }
     }
-    function effacer() {
-        document.getElementById('defaites').value = ""; document.getElementById('buts').value = ""; document.getElementById('cote').value = "";
-        document.getElementById('prediction').innerText = "En attente de saisie des données..."; document.getElementById('prediction').style.color = "#ffffff"; document.getElementById('confiance').innerText = "";
+
+    function reinitialiser() {
+        document.getElementById('defaites').value = "";
+        document.getElementById('buts').value = "";
+        document.getElementById('cote').value = "";
+        document.getElementById('resultats').style.display = "none";
     }
 </script>
+
 </body>
 </html>
