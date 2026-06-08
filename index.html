@@ -176,6 +176,7 @@
 </div>
 
 <script>
+    // Liste des 20 clubs officiels de la ligue virtuelle
     const clubs = [
         "Bournemouth", "Manchester Blue", "C. Palace", "A. Villa", 
         "London Blues", "Everton", "Newcastle", "Fulham", 
@@ -186,6 +187,105 @@
 
     const homeSelect = document.getElementById('homeTeam');
     const awaySelect = document.getElementById('awayTeam');
+    
+    // Remplissage corrigé pour afficher les noms sur téléphone
     clubs.forEach(club => {
-        homeSelect.options[homeSelect.options.length] = new Option(club, club);
-        awaySelect.options
+        let optHome = document.createElement('option');
+        optHome.value = club;
+        optHome.textContent = club;
+        homeSelect.appendChild(optHome);
+
+        let optAway = document.createElement('option');
+        optAway.value = club;
+        optAway.textContent = club;
+        awaySelect.appendChild(optAway);
+    });
+    awaySelect.selectedIndex = 1;
+
+    function calculerCotesInversees() {
+        const home = document.getElementById('homeTeam').value;
+        const away = document.getElementById('awayTeam').value;
+        
+        const c1 = parseFloat(document.getElementById('cote1').value) || 0;
+        const cN = parseFloat(document.getElementById('coteN').value) || 0;
+        const c2 = parseFloat(document.getElementById('cote2').value) || 0;
+
+        if (home === away) { alert("Choisissez deux équipes différentes !"); return; }
+        if (!c1 || !cN || !c2) { alert("Veuillez remplir les 3 cotes !"); return; }
+
+        document.getElementById('resultats').style.display = "block";
+        document.getElementById('match-title').innerText = home + " vs " + away;
+
+        // Calcul de la marge brute du bookmaker
+        const margeBrute = (1/c1) + (1/cN) + (1/c2);
+        
+        // Calcul des probabilités réelles sans la marge
+        const proba1 = (1/c1) / margeBrute;
+        const proba2 = (1/c2) / margeBrute;
+        
+        const maxProba = Math.max(proba1, proba2);
+        const estDom = proba1 > proba2;
+        const favoriNom = estDom ? home : away;
+        const coteFavori = estDom ? c1 : c2;
+
+        document.getElementById('val-proba-pure').innerText = Math.round(maxProba * 100) + "% de dominance";
+
+        // Étoiles de confiance selon la cote brute
+        let etoiles = 3;
+        if (coteFavori <= 1.35) etoiles = 5;
+        else if (coteFavori <= 1.75) etoiles = 4;
+        else if (coteFavori >= 2.40) etoiles = 1;
+        else etoiles = 2;
+
+        document.getElementById('val-stars').innerText = "⭐".repeat(etoiles);
+
+        // Conseils et options de jeu
+        const txtOption = document.getElementById('val-option');
+        if (etoiles === 5) {
+            txtOption.innerText = "Victoire Directe (Très Forte) de " + favoriNom + " 🔥";
+            txtOption.style.color = "#22c55e";
+        } else if (etoiles === 4) {
+            txtOption.innerText = "Victoire Simple de " + favoriNom + " 👍";
+            txtOption.style.color = "#a3e635";
+        } else if (etoiles === 2 || etoiles === 3) {
+            let securite = estDom ? "Double Chance 1X" : "Double Chance X2";
+            txtOption.innerText = securite + " (Couverture Recommandée ⚠️)";
+            txtOption.style.color = "#facc15";
+        } else {
+            txtOption.innerText = "Match d'évitement (Trop équilibré) ❌";
+            txtOption.style.color = "#ef4444";
+        }
+
+        // Tendance buts selon la puissance globale
+        const txtTotal = document.getElementById('val-total-buts');
+        if (coteFavori <= 1.45) {
+            txtTotal.innerText = "Tendance Élevée : Plus de 2.5 Buts (Over)";
+        } else if (cN < 3.20 && coteFavori > 2.20) {
+            txtTotal.innerText = "Tendance Basse : Moins de 2.5 Buts (Under)";
+        } else {
+            txtTotal.innerText = "Tendance Modérée : Plus de 1.5 Buts";
+        }
+
+        // Attribution des scores les plus probables
+        const txtScore = document.getElementById('val-score');
+        if (estDom) {
+            if (c1 <= 1.35) txtScore.innerText = "3-0 / 3-1 / 4-0";
+            else if (c1 <= 1.75) txtScore.innerText = "2-0 / 2-1 / 1-0";
+            else txtScore.innerText = "1-0 / 1-1 / 2-1";
+        } else {
+            if (c2 <= 1.35) txtScore.innerText = "0-3 / 1-3 / 0-4";
+            else if (c2 <= 1.75) txtScore.innerText = "0-2 / 1-2 / 0-1";
+            else txtScore.innerText = "0-1 / 1-1 / 1-2";
+        }
+    }
+
+    function reinitialiser() {
+        document.getElementById('cote1').value = "";
+        document.getElementById('coteN').value = "";
+        document.getElementById('cote2').value = "";
+        document.getElementById('resultats').style.display = "none";
+    }
+</script>
+
+</body>
+</html>
